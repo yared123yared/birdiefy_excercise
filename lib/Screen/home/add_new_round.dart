@@ -114,7 +114,9 @@ class _AddNewRoundState extends State<AddNewRound> {
             ButtonWidget(
                 onPressed: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const AddNewHole()));
+                      builder: (context) => AddNewHole(
+                            fromRound: false,
+                          )));
                 },
                 text: 'Add holes')
           ],

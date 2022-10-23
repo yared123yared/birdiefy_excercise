@@ -10,26 +10,38 @@ class Round extends Equatable {
       required this.number_of_holes});
 
   String? id;
-  final String field_name;
-  final String date;
-  final int number_of_holes;
-  final Holes? holes;
+  String? field_name;
+  String? date;
+  int? number_of_holes;
+  List<Holes>? holes;
 
-  factory Round.fromJson(Map<String, dynamic> json) => Round(
-        id: json['id'] ?? "",
-        field_name: json['field_name'] ?? "",
-        date: json['date'] ?? "",
-        number_of_holes: json['number_of_holes'] ?? "",
-        holes: json["Holes"] != null ? Holes.fromJson(json['holes']) : null,
-      );
+  Round.fromJson(Map<String, dynamic> json) {
+    id = json['id'] ?? "";
+    field_name = json['field_name'] ?? "";
+    date = json['date'] ?? "";
+    number_of_holes = json['number_of_holes'] ?? "";
+    if (json['Holes'] != null) {
+      holes = <Holes>[];
+      json['Holes'].forEach((v) {
+        holes!.add(Holes.fromJson(v));
+      });
+    }
+  }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'field_name': field_name,
-        'date': date,
-        'number_of_holes': number_of_holes,
-        'holes': holes != null ? holes!.toJson() : null,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['field_name'] = field_name;
+    data['date'] = date;
+    data['number_of_holes'] = number_of_holes;
+    if (holes != null) {
+      data['Holes'] = holes!.map((v) => v.toJson()).toList();
+    }
+
+    return data;
+  }
+
+  // 'holes': holes != null ? holes!.toJson() : null,
 
   @override
   List<Object?> get props => [id, field_name, date, number_of_holes, holes];

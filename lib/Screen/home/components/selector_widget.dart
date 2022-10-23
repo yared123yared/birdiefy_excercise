@@ -2,9 +2,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class SelectorWidget extends StatefulWidget {
+  final ValueChanged<int> valueChanged;
+  final bool? isPars;
   final bool fromhits;
   final List list;
-  const SelectorWidget({super.key, required this.list, required this.fromhits});
+  SelectorWidget(
+      {super.key,
+      required this.list,
+      required this.fromhits,
+      required this.isPars,
+      required this.valueChanged});
 
   @override
   State<SelectorWidget> createState() => _SelectorWidgetState();
@@ -24,7 +31,6 @@ class _SelectorWidgetState extends State<SelectorWidget> {
           color: Colors.grey.shade900,
         ),
         child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(
               child: GestureDetector(
@@ -47,24 +53,25 @@ class _SelectorWidgetState extends State<SelectorWidget> {
                 // width: 350,
                 child: CarouselSlider(
                   options: CarouselOptions(
-                      autoPlay: false,
-                      enlargeCenterPage: true,
-                      viewportFraction: 0.9,
-                      aspectRatio: 2.0,
-                      initialPage: 2,
-                      enableInfiniteScroll: false,
-                      padEnds: true),
+                    autoPlay: false,
+                    enlargeCenterPage: true,
+                    viewportFraction: 0.9,
+                    aspectRatio: 2.0,
+                    initialPage: 0,
+                    enableInfiniteScroll: false,
+                  ),
                   items: widget.list.map((i) {
                     return Builder(
                       builder: (BuildContext context) {
+                        widget.valueChanged(i);
                         return FittedBox(
                           child: Container(
-
                               // width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
                               // decoration: BoxDecoration(color: Colors.amber),
                               child: Text(
-                                '$i',
+                                widget.isPars == true ? '  $i\nPar' : '$i',
                                 style: TextStyle(
                                     fontSize: 4.0,
                                     color: Colors.lightGreenAccent.shade400),

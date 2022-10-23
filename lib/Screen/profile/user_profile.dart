@@ -1,4 +1,5 @@
 import 'package:app/Screen/profile/components/profile_widget.dart';
+import 'package:app/Screen/profile/object_detector.dart';
 import 'package:app/Widget/button_widget.dart';
 import 'package:app/model/user_entity.dart';
 import 'package:app/utils/app_theme.dart';
@@ -35,7 +36,12 @@ class UserProfile extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  ButtonWidget(onPressed: () {}, text: "Detect Objects")
+                  ButtonWidget(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => ObjectDetector()));
+                      },
+                      text: "Detect Objects")
                 ],
               ),
             ),

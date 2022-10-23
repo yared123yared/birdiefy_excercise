@@ -1,4 +1,5 @@
 import 'package:app/Screen/home/components/round_widget.dart';
+import 'package:app/model/round.dart';
 import 'package:app/model/user_entity.dart';
 import 'package:app/preference/user_preference_data.dart';
 import 'package:app/service/injection.dart';
@@ -16,7 +17,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,12 +30,10 @@ class _HomeState extends State<Home> {
       ),
       body: FutureBuilder<UserEntity?>(
         future: getIt<UserPreferences>().getUserInformation(),
-        builder:
-            (BuildContext context, AsyncSnapshot<UserEntity?> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<UserEntity?> snapshot) {
           if (snapshot.hasData) {
-
             print("User Object: ${snapshot.data}");
-     
+
             final db = FirebaseFirestore.instance
                 .collection('users')
                 .doc(snapshot.data!.id)
@@ -46,11 +44,14 @@ class _HomeState extends State<Home> {
                 builder: (_, snapshot) {
                   if (snapshot.hasData) {
                     var doc = snapshot.data!.docs;
+
                     return ListView.builder(
                       itemBuilder: (context, index) {
-
+                        Round round = Round.fromJson(doc[index].data());
+                        round.id = doc[index].id;
+                        print("Id of round: ${round.field_name}");
                         return RoundWidget(
-                          documentSnapshot: doc[index],
+                          round: round,
                           collectionReference: db,
                         );
                       },
@@ -73,7 +74,7 @@ class _HomeState extends State<Home> {
         ),
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AddNewRound()));
+              MaterialPageRoute(builder: (context) =>  AddNewRound()));
         },
       ),
     );
