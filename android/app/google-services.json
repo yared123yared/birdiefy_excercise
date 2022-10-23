@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "518344960942",
+    "project_id": "bierdiefy",
+    "storage_bucket": "bierdiefy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518344960942:android:e83da391daf38f62a1363f",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "518344960942-1gfljcbdn16t0b0d9gsk39ua8hf4kmkk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.application",
+            "certificate_hash": "e9fd184c85435b184857a9c88550457f527d003a"
+          }
+        },
+        {
+          "client_id": "518344960942-j16a4788hph6su97g7d5inupu749tqaj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCV6C6Girq8A48NGDAEUlM0VwCnMGHqYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "518344960942-j16a4788hph6su97g7d5inupu749tqaj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
