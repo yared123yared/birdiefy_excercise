@@ -3,6 +3,7 @@ import 'package:app/Widget/button_widget.dart';
 import 'package:app/Widget/dropdown_button_widget.dart';
 import 'package:app/model/round.dart';
 import 'package:app/streams/nearby_course_stream.dart';
+import 'package:app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -51,7 +52,9 @@ class _AddNewRoundState extends State<AddNewRound> {
         if (snapshot.hasError) {
           print("Error ${snapshot.error}");
         }
-        return const CircularProgressIndicator();
+        return const CircularProgressIndicator(
+          color: AppTheme.primaryColor,
+        );
       },
     );
   }

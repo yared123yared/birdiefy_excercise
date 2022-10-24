@@ -24,6 +24,9 @@ class _AddNewHoleState extends State<AddNewHole> {
 
   int hitsSelected = 0;
   int parsSelected = 0;
+
+  bool isSaveLoading = false;
+  bool isFinishRoundLoading = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -118,6 +121,9 @@ class _AddNewHoleState extends State<AddNewHole> {
                         print("Pars and hits: $parsSelected");
                         print("Pars and hits: $hitsSelected");
                         try {
+                          setState(() {
+                            isSaveLoading = true;
+                          });
                           Round? round = widget.round;
                           Holes holes =
                               Holes(hits: hitsSelected, pars: parsSelected);
@@ -139,7 +145,7 @@ class _AddNewHoleState extends State<AddNewHole> {
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text(
                                     "Your Hole is filled with the desired hole number"),
                               ),
@@ -150,6 +156,9 @@ class _AddNewHoleState extends State<AddNewHole> {
                               MaterialPageRoute(
                                   builder: (context) => const RoundListPage()));
                         } catch (e) {
+                          setState(() {
+                            isSaveLoading = false;
+                          });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(e.toString()),
@@ -157,22 +166,27 @@ class _AddNewHoleState extends State<AddNewHole> {
                           );
                         }
                       },
-                      child: Row(
-                        children: const [
-                          Text(
-                            "Save",
-                            style: TextStyle(color: AppTheme.primaryColor),
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Icon(
-                            Icons.arrow_circle_right_outlined,
-                            color: AppTheme.primaryColor,
-                            size: 18,
-                          ),
-                        ],
-                      ),
+                      child: isSaveLoading
+                          ? CircularProgressIndicator(
+                              color: AppTheme.primaryColor,
+                            )
+                          : Row(
+                              children: const [
+                                Text(
+                                  "Save",
+                                  style:
+                                      TextStyle(color: AppTheme.primaryColor),
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                Icon(
+                                  Icons.arrow_circle_right_outlined,
+                                  color: AppTheme.primaryColor,
+                                  size: 18,
+                                ),
+                              ],
+                            ),
                     )
                   ],
                 ),
@@ -181,25 +195,31 @@ class _AddNewHoleState extends State<AddNewHole> {
             const SizedBox(
               height: 30,
             ),
-            ButtonWidget(
-                onPressed: () async {
-                  // if (widget.round!.holes!.length ==
-                  //     widget.round!.number_of_holes) {
-
-                  // } else {
-                  //   // the round is not ready to finish
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(
-                  //       content: Text(
-                  //           "This is not ready for finish ${widget.round!.holes!.length}"),
-                  //     ),
-                  //   );
-                  // }
-                  await finishRound(round: widget.round);
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const RoundListPage()));
-                },
-                text: 'Finish Round'),
+            isFinishRoundLoading
+                ? const CircularProgressIndicator(
+                    color: AppTheme.primaryColor,
+                  )
+                : ButtonWidget(
+                    onPressed: () async {
+                      try {
+                        setState(() {
+                          isFinishRoundLoading = true;
+                        });
+                        await finishRound(round: widget.round);
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => const RoundListPage()));
+                      } catch (e) {
+                        setState(() {
+                          isFinishRoundLoading = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.toString()),
+                          ),
+                        );
+                      }
+                    },
+                    text: 'Finish Round'),
           ],
         ),
       ),

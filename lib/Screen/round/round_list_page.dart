@@ -1,3 +1,4 @@
+import 'package:app/Screen/round/components/no_round_widget.dart';
 import 'package:app/Screen/round/components/round_widget.dart';
 import 'package:app/model/round.dart';
 import 'package:app/model/user_entity.dart';
@@ -44,24 +45,31 @@ class _RoundListPageState extends State<RoundListPage> {
                 builder: (_, snapshot) {
                   if (snapshot.hasData) {
                     var doc = snapshot.data!.docs;
-
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        Round round = Round.fromJson(doc[index].data());
-                        round.id = doc[index].id;
-                        print("Id of round: ${round.field_name}");
-                        return RoundWidget(
-                          round: round,
-                          collectionReference: db,
-                        );
-                      },
-                      itemCount: doc.length,
-                    );
+                    print("List length: ${snapshot.data!.docs.length}");
+                    if (snapshot.data!.docs.length == 0) {
+                      return const NoRoundWidget();
+                    } else {
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          Round round = Round.fromJson(doc[index].data());
+                          round.id = doc[index].id;
+                          print("Id of round: ${round.field_name}");
+                          return RoundWidget(
+                            round: round,
+                            collectionReference: db,
+                          );
+                        },
+                        itemCount: doc.length,
+                      );
+                    }
                   }
                   return const CircularProgressIndicator();
                 });
           } else {
-            return Text('Calculating answer...');
+            return const Text(
+              'Calculating answer...',
+              style: TextStyle(),
+            );
           }
         },
       ),
