@@ -40,7 +40,6 @@ dependencies:
   firebase_core:
   cloud_firestore: ^4.0.1
   firebase_auth: ^4.0.1
-  dropdown_date_picker: ^0.1.1+2
   carousel_slider: ^4.1.1
   selector: ^3.0.0
   http: ^0.13.3
@@ -53,6 +52,7 @@ dependencies:
   persistent_bottom_nav_bar: ^5.0.2
   tflite: ^1.1.2
   image_picker: ^0.8.6
+  intl: ^0.17.0
   
   
 

@@ -1,9 +1,12 @@
 import 'package:app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DropDownDatePicker extends StatefulWidget {
   final String label;
-  const DropDownDatePicker({super.key, required this.label});
+  final ValueChanged<String> valueChanged;
+  const DropDownDatePicker(
+      {super.key, required this.label, required this.valueChanged});
 
   @override
   State<DropDownDatePicker> createState() => _DropDownDatePickerState();
@@ -11,13 +14,11 @@ class DropDownDatePicker extends StatefulWidget {
 
 class _DropDownDatePickerState extends State<DropDownDatePicker> {
   DateTime dateTime = DateTime.now();
+  // String formattedDate = DateFormat('MM dd').format(dateTime);
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 340,
-      // decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.circular(20),
-      // ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
@@ -25,7 +26,7 @@ class _DropDownDatePickerState extends State<DropDownDatePicker> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "${widget.label}",
+                '${widget.label}',
                 style: TextStyle(color: AppTheme.primaryColor),
               ),
             ),
@@ -34,7 +35,8 @@ class _DropDownDatePickerState extends State<DropDownDatePicker> {
             ),
             DropdownButtonFormField<DateTime>(
               items: ['Choose A Date']
-                  .map((e) => DropdownMenuItem<DateTime>(child: Text(e)))
+                  .map((e) => DropdownMenuItem<DateTime>(
+                      child: Text('${DateFormat('MMMd').format(dateTime)}')))
                   .toList(),
               onChanged: (value) {
                 setState(() {
@@ -46,6 +48,7 @@ class _DropDownDatePickerState extends State<DropDownDatePicker> {
                       .then((date) {
                     setState(() {
                       dateTime = date!;
+                      widget.valueChanged(DateFormat('MMMd').format(dateTime));
                     });
                   });
                 });

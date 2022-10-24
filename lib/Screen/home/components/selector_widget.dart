@@ -1,3 +1,4 @@
+import 'package:app/utils/app_theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -37,9 +38,9 @@ class _SelectorWidgetState extends State<SelectorWidget> {
                   onTap: () => buttonCarouselController.previousPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.linear),
-                  child: Icon(
+                  child: const Icon(
                     Icons.arrow_back_ios_new_sharp,
-                    color: Colors.lightGreenAccent.shade400,
+                    color: AppTheme.primaryColor,
                   )),
             ),
             VerticalDivider(
@@ -51,7 +52,7 @@ class _SelectorWidgetState extends State<SelectorWidget> {
             Expanded(
               child: Container(
                 // width: 350,
-                child: CarouselSlider(
+                child: CarouselSlider.builder(
                   options: CarouselOptions(
                     autoPlay: false,
                     enlargeCenterPage: true,
@@ -59,28 +60,26 @@ class _SelectorWidgetState extends State<SelectorWidget> {
                     aspectRatio: 2.0,
                     initialPage: 0,
                     enableInfiniteScroll: false,
+                    onPageChanged: (index, reason) {
+                      widget.valueChanged(widget.list[index]);
+                    },
                   ),
-                  items: widget.list.map((i) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        widget.valueChanged(i);
-                        return FittedBox(
-                          child: Container(
-                              // width: MediaQuery.of(context).size.width,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 5.0),
-                              // decoration: BoxDecoration(color: Colors.amber),
-                              child: Text(
-                                widget.isPars == true ? '  $i\nPar' : '$i',
-                                style: TextStyle(
-                                    fontSize: 4.0,
-                                    color: Colors.lightGreenAccent.shade400),
-                              )),
-                        );
-                      },
-                    );
-                  }).toList(),
                   carouselController: buttonCarouselController,
+                  itemBuilder:
+                      (BuildContext context, int index, int realIndex) {
+                    return FittedBox(
+                      child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Text(
+                            widget.isPars == true
+                                ? '  ${widget.list[index]}\nPar'
+                                : '${widget.list[index]}',
+                            style: const TextStyle(
+                                fontSize: 4.0, color: AppTheme.primaryColor),
+                          )),
+                    );
+                  },
+                  itemCount: widget.list.length,
                 ),
               ),
             ),
@@ -96,12 +95,11 @@ class _SelectorWidgetState extends State<SelectorWidget> {
                   onTap: () => buttonCarouselController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.linear),
-                  child: Icon(
+                  child: const Icon(
                     Icons.arrow_forward_ios,
-                    color: Colors.lightGreenAccent.shade400,
+                    color: AppTheme.primaryColor,
                   )),
             )
-            // Text(_selector())
           ],
         ),
       ),

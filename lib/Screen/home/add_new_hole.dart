@@ -2,6 +2,7 @@ import 'package:app/Screen/home/home.dart';
 import 'package:app/Widget/button_widget.dart';
 import 'package:app/model/holes.dart';
 import 'package:app/model/round.dart';
+import 'package:app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'components/selector_widget.dart';
@@ -18,10 +19,17 @@ class AddNewHole extends StatefulWidget {
 
 class _AddNewHoleState extends State<AddNewHole> {
   List list = [3, 4, 5];
-  List hits = [for (var i = 0; i < 10; i += 1) i];
+  List hits = [for (var i = 1; i < 10; i += 1) i];
 
   int hitsSelected = 0;
   int parsSelected = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    hitsSelected = hits.first;
+    parsSelected = list.first;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +71,10 @@ class _AddNewHoleState extends State<AddNewHole> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
+                    const Text(
                       "Types of hole",
-                      style: TextStyle(
-                          color: Colors.lightGreenAccent.shade400,
-                          fontSize: 20),
+                      style:
+                          TextStyle(color: AppTheme.primaryColor, fontSize: 20),
                     ),
                     const SizedBox(
                       height: 5,
@@ -85,11 +92,10 @@ class _AddNewHoleState extends State<AddNewHole> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(
+                    const Text(
                       "Hits",
-                      style: TextStyle(
-                          color: Colors.lightGreenAccent.shade400,
-                          fontSize: 20),
+                      style:
+                          TextStyle(color: AppTheme.primaryColor, fontSize: 20),
                     ),
                     SelectorWidget(
                       list: hits,
@@ -138,18 +144,17 @@ class _AddNewHoleState extends State<AddNewHole> {
                         }
                       },
                       child: Row(
-                        children: [
+                        children: const [
                           Text(
                             "Save",
-                            style: TextStyle(
-                                color: Colors.lightGreenAccent.shade400),
+                            style: TextStyle(color: AppTheme.primaryColor),
                           ),
-                          const SizedBox(
+                          SizedBox(
                             width: 3,
                           ),
                           Icon(
                             Icons.arrow_circle_right_outlined,
-                            color: Colors.lightGreenAccent.shade400,
+                            color: AppTheme.primaryColor,
                             size: 18,
                           ),
                         ],

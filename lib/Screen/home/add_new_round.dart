@@ -4,6 +4,7 @@ import 'package:app/Widget/dropdown_button_widget.dart';
 import 'package:app/model/round.dart';
 import 'package:app/streams/nearby_course_stream.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'add_new_hole.dart';
 import 'components/dropdown_date_picker.dart';
@@ -22,13 +23,14 @@ class _AddNewRoundState extends State<AddNewRound> {
       NearbyStream(Repository(httpClient: http.Client()));
   String course = '';
   String no_holes = '9';
-  String date = '';
+  late String date;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     nearbyStream!.getNearbyCourse();
+    date = DateFormat('MMMd').format(datel as DateTime);
   }
 
   Widget _buildSelectCourse() {
@@ -96,8 +98,11 @@ class _AddNewRoundState extends State<AddNewRound> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const DropDownDatePicker(
+                      DropDownDatePicker(
                         label: 'Date of the round',
+                        valueChanged: (String value) {
+                          date = value;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -126,7 +131,7 @@ class _AddNewRoundState extends State<AddNewRound> {
                 onPressed: () {
                   Round round = Round(
                       field_name: course,
-                      date: "Sept 14",
+                      date: date,
                       number_of_holes: int.parse(no_holes));
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => AddNewHole(
