@@ -19,7 +19,7 @@ class AddNewHole extends StatefulWidget {
 
 class _AddNewHoleState extends State<AddNewHole> {
   List list = [3, 4, 5];
-  List hits = [for (var i = 1; i < 10; i += 1) i];
+  List hits = [for (var i = 1; i < 100; i += 1) i];
 
   int hitsSelected = 0;
   int parsSelected = 0;
