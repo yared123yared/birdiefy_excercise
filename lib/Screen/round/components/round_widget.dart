@@ -54,7 +54,9 @@ class RoundWidget extends StatelessWidget {
                           fromRound: true,
                           round: round,
                         )
-                      :  RoundDetailPage(round: round,))),
+                      : RoundDetailPage(
+                          round: round,
+                        ))),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FittedBox(
@@ -120,7 +122,7 @@ class RoundWidget extends StatelessWidget {
                               )
                             ],
                           ),
-                        const StatsWidget()
+                          const StatsWidget()
                         ],
                       ),
                     ),
@@ -129,7 +131,7 @@ class RoundWidget extends StatelessWidget {
               ),
             );
           }
-          return const CircularProgressIndicator();
+          return const SizedBox();
         });
   }
 }

@@ -4,6 +4,7 @@ import 'package:app/Screen/login/login.dart';
 import 'package:app/Widget/textfield_widget.dart';
 import 'package:app/model/user_entity.dart';
 import 'package:app/service/firebase_service.dart';
+import 'package:app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 
 final TextEditingController _emailController = TextEditingController();
@@ -35,16 +36,78 @@ class _SignUpViewState extends State<SignUpView> {
   bool hasFirstNameError = false;
   bool hasLastNameError = false;
   bool hasHandicapError = false;
-
+  bool obscureText1 = true;
+  bool obscureText2 = true;
   Role currentRole = Role.Player;
+  bool isLoading = false;
+
+  Widget _buildCreateAccount() {
+    return ElevatedButton(
+      style: ButtonStyle(
+        padding: MaterialStateProperty.resolveWith((states) {
+          return const EdgeInsets.symmetric(horizontal: 50, vertical: 12);
+        }),
+        shape: MaterialStateProperty.resolveWith((states) {
+          return RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          );
+        }),
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          // If the button is pressed, return green, otherwise blue
+          if (states.contains(MaterialState.pressed)) {
+            return AppTheme.primaryColor;
+          }
+          return AppTheme.primaryColor;
+        }),
+      ),
+      onPressed: () async {
+        setState(() {
+          isLoading = true;
+        });
+        if (_confirmPasswordController.text != _passwordController.text) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Password didn't match"),
+            ),
+          );
+        } else {
+          UserEntity userEntity = UserEntity(
+              password: _passwordController.text,
+              firstName: _firstNameController.text,
+              lastName: _lastNameController.text,
+              email: _emailController.text,
+              handicap: _handicapController.text,
+              role: Role.Player.toString());
+          try {
+            await createUserWithEmailAndPassword(
+                email: _emailController.text,
+                password: _passwordController.text,
+                userEntity: userEntity);
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => LoginView()));
+          } catch (e) {
+            setState(() {
+              isLoading = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(e.toString()),
+              ),
+            );
+          }
+        }
+      },
+      child: Text(
+        'Create Account',
+        style: TextStyle(color: Colors.black),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade900,
-      // appBar: AppBar(
-      //   title: const Text('Create Account'),
-      //   centerTitle: true,
-      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 50, 0, 13),
@@ -107,6 +170,23 @@ class _SignUpViewState extends State<SignUpView> {
                                 textInputType: TextInputType.visiblePassword,
                                 textInputAction: TextInputAction.next,
                                 textCapitalization: TextCapitalization.words,
+                                obscureText: obscureText1,
+                                suffixIcon: IconButton(
+                                  splashRadius: 1,
+                                  onPressed: () {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    setState(() {
+                                      obscureText1 = !obscureText1;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    !obscureText1
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                               ),
                               TextFieldWidget(
                                 controller: _confirmPasswordController,
@@ -129,6 +209,23 @@ class _SignUpViewState extends State<SignUpView> {
                                 textInputType: TextInputType.visiblePassword,
                                 textInputAction: TextInputAction.next,
                                 textCapitalization: TextCapitalization.words,
+                                obscureText: obscureText2,
+                                suffixIcon: IconButton(
+                                  splashRadius: 1,
+                                  onPressed: () {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    setState(() {
+                                      obscureText2 = !obscureText2;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    !obscureText2
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                               ),
                               TextFieldWidget(
                                 controller: _firstNameController,
@@ -196,15 +293,14 @@ class _SignUpViewState extends State<SignUpView> {
                                 textInputAction: TextInputAction.next,
                                 textCapitalization: TextCapitalization.words,
                               ),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                 child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
                                     "You are a: ",
-                                    style: TextStyle(
-                                        color:
-                                            Colors.lightGreenAccent.shade400),
+                                    style:
+                                        TextStyle(color: AppTheme.primaryColor),
                                   ),
                                 ),
                               ),
@@ -227,19 +323,17 @@ class _SignUpViewState extends State<SignUpView> {
                                                 (states) {
                                           if (states.contains(
                                               MaterialState.selected)) {
-                                            return Colors
-                                                .lightGreenAccent.shade400;
+                                            return AppTheme.primaryColor;
                                           }
                                           return Colors.white;
                                         }),
                                         focusColor: Colors.white,
                                         activeColor: Colors.white,
                                       ),
-                                      Text(
+                                      const Text(
                                         'Player',
                                         style: TextStyle(
-                                            color: Colors
-                                                .lightGreenAccent.shade400),
+                                            color: AppTheme.primaryColor),
                                       )
                                     ],
                                   ),
@@ -258,17 +352,15 @@ class _SignUpViewState extends State<SignUpView> {
                                                 (states) {
                                           if (states.contains(
                                               MaterialState.selected)) {
-                                            return Colors
-                                                .lightGreenAccent.shade400;
+                                            return AppTheme.primaryColor;
                                           }
                                           return Colors.white;
                                         }),
                                       ),
-                                      Text(
+                                      const Text(
                                         'Coach',
                                         style: TextStyle(
-                                            color: Colors
-                                                .lightGreenAccent.shade400),
+                                            color: AppTheme.primaryColor),
                                       ),
                                     ],
                                   ),
@@ -280,10 +372,14 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ],
                   ),
-                  _SubmitButton(
-                    email: _emailController.text,
-                    password: _passwordController.text,
+                  const SizedBox(
+                    height: 10,
                   ),
+                  isLoading
+                      ? const CircularProgressIndicator(
+                          color: AppTheme.primaryColor,
+                        )
+                      : _buildCreateAccount(),
                 ],
               ),
               const SizedBox(
@@ -301,10 +397,9 @@ class _SignUpViewState extends State<SignUpView> {
                   GestureDetector(
                       onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => LoginView())),
-                      child: Text(
+                      child: const Text(
                         "Login here",
-                        style:
-                            TextStyle(color: Colors.lightGreenAccent.shade400),
+                        style: TextStyle(color: AppTheme.primaryColor),
                       ))
                 ],
               )
@@ -316,102 +411,16 @@ class _SignUpViewState extends State<SignUpView> {
   }
 }
 
-class _CreateAccountEmail extends StatelessWidget {
-  _CreateAccountEmail({
-    Key? key,
-    required this.emailController,
-  }) : super(key: key);
-  final TextEditingController emailController;
+// class _SubmitButton extends StatelessWidget {
+//   _SubmitButton({
+//     Key? key,
+//     required this.email,
+//     required this.password,
+//   }) : super(key: key);
+//   final String email, password;
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width / 2,
-      child: TextField(
-        controller: emailController,
-        decoration: const InputDecoration(hintText: 'Email'),
-      ),
-    );
-  }
-}
-
-class _CreateAccountPassword extends StatelessWidget {
-  _CreateAccountPassword({
-    Key? key,
-    required this.passwordController,
-  }) : super(key: key);
-  final TextEditingController passwordController;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width / 2,
-      child: TextField(
-        controller: passwordController,
-        obscureText: true,
-        decoration: const InputDecoration(
-          hintText: 'Password',
-        ),
-      ),
-    );
-  }
-}
-
-class _SubmitButton extends StatelessWidget {
-  _SubmitButton({
-    Key? key,
-    required this.email,
-    required this.password,
-  }) : super(key: key);
-  final String email, password;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        padding: MaterialStateProperty.resolveWith((states) {
-          return EdgeInsets.symmetric(horizontal: 50, vertical: 12);
-        }),
-        shape: MaterialStateProperty.resolveWith((states) {
-          return RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          );
-        }),
-        backgroundColor: MaterialStateProperty.resolveWith((states) {
-          // If the button is pressed, return green, otherwise blue
-          if (states.contains(MaterialState.pressed)) {
-            return Colors.lightGreenAccent;
-          }
-          return Colors.lightGreenAccent.shade400;
-        }),
-      ),
-      onPressed: () async {
-        UserEntity userEntity = UserEntity(
-            password: _passwordController.text,
-            firstName: _firstNameController.text,
-            lastName: _lastNameController.text,
-            email: _emailController.text,
-            handicap: _handicapController.text,
-            role: Role.Player.toString());
-        try {
-          await createUserWithEmailAndPassword(
-              email: _emailController.text,
-              password: _passwordController.text,
-              userEntity: userEntity);
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => LoginView()));
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(e.toString()),
-            ),
-          );
-        }
-      },
-      child: const Text(
-        'Create Account',
-        style: TextStyle(color: Colors.black),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+    
+//   }
+// }

@@ -11,6 +11,7 @@ class TextFieldWidget extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final bool autofocus, absorbing;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final int? maxLines;
   final bool obscureText;
   final ValueChanged<bool> onFocusChange;
@@ -30,6 +31,7 @@ class TextFieldWidget extends StatelessWidget {
     required this.nextFocus,
     required this.title,
     this.hint = '',
+    this.prefixIcon,
     required this.textInputType,
     required this.textInputAction,
     required this.textCapitalization,
@@ -77,7 +79,7 @@ class TextFieldWidget extends StatelessWidget {
                 Expanded(
                   child: Focus(
                     onFocusChange: onFocusChange,
-                    child: TextFormField(
+                    child: TextField(
                       controller: controller,
                       focusNode: focusNode,
                       onChanged: onChanged,
@@ -101,10 +103,11 @@ class TextFieldWidget extends StatelessWidget {
                                   : "Enter your $title here",
                           hintStyle: TextStyle(color: Colors.grey.shade700),
                           counterText: '',
-                          isDense: true,
-                          filled: true,
-                          focusedBorder: const UnderlineInputBorder(),
-                          fillColor: Colors.grey.shade900,
+                          // isDense: false,
+                          // filled: true,
+                          prefixIcon: prefixIcon,
+                          // focusedBorder: const UnderlineInputBorder(),
+                          fillColor: Colors.grey.shade400,
                           errorStyle: const TextStyle(color: Colors.red)),
                     ),
                   ),
