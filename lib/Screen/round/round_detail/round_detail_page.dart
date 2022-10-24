@@ -7,7 +7,13 @@ import 'package:flutter/material.dart';
 
 class RoundDetailPage extends StatelessWidget {
   final Round round;
-  const RoundDetailPage({super.key, required this.round});
+  final int totalHits;
+  final int expectedHits;
+  const RoundDetailPage(
+      {super.key,
+      required this.round,
+      required this.totalHits,
+      required this.expectedHits});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,7 @@ class RoundDetailPage extends StatelessWidget {
               AutoSizeText(
                 "${round.field_name}",
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 1,
                 style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               const SizedBox(
@@ -88,23 +94,25 @@ class RoundDetailPage extends StatelessWidget {
                                 ScoreBoardWidget(
                                   holes: holes_1,
                                   round: round,
+                                  from_18: false,
                                 ),
                                 round.number_of_holes == 18
                                     ? ScoreBoardWidget(
                                         holes: holes_2,
                                         round: round,
+                                        from_18: true,
                                       )
                                     : const SizedBox()
                               ],
                             ),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
+                        Padding(
+                          padding: EdgeInsets.all(12.0),
                           child: Align(
                             alignment: Alignment.bottomRight,
                             child: Text(
-                              '78(+7)',
+                              '${totalHits}(+${totalHits - expectedHits})',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

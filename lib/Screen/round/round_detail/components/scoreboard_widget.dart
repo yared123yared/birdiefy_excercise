@@ -5,23 +5,48 @@ import 'package:app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ScoreBoardWidget extends StatelessWidget {
+  final bool from_18;
   final Round round;
   final List<int> holes;
-  const ScoreBoardWidget({super.key, required this.round, required this.holes});
+  const ScoreBoardWidget(
+      {super.key,
+      required this.round,
+      required this.holes,
+      required this.from_18});
   int getTotalHits() {
+    int index = from_18 ? 10 : 0;
+
     if (round.holes == null) return 0;
+    if (round.holes!.length < index) return 0;
     int sum = 0;
-    for (int i = 0; i < round.holes!.length; i += 1) {
-      sum += round.holes![i].hits;
+    int limit = round.holes!.length < 9 ? round.holes!.length : 9;
+    late List<Holes> list;
+    if (from_18) {
+      list = round.holes!.sublist(9, round.holes!.length);
+    }
+    List<Holes> list2 = round.holes!.sublist(0, limit);
+
+    var listForuse = from_18 == true ? list : list2;
+    for (int i = 0; i < listForuse.length; i += 1) {
+      sum += listForuse[i].hits;
     }
     return sum;
   }
 
   int getExpectedHits() {
+    int index = from_18 ? 10 : 0;
+
     if (round.holes == null) return 0;
+    if (round.holes!.length < index) return 0;
     int sum = 0;
-    for (int i = 0; i < round.holes!.length; i += 1) {
-      sum += round.holes![i].pars;
+    int limit = round.holes!.length < 9 ? round.holes!.length : 9;
+    List<Holes> list =
+        from_18 == true ? round.holes!.sublist(0, round.holes!.length) : [];
+    List<Holes> list2 = round.holes!.sublist(0, limit);
+
+    var listForuse = from_18 == true ? list : list2;
+    for (int i = 0; i < listForuse.length; i += 1) {
+      sum += listForuse[i].pars;
     }
     return sum;
   }
@@ -98,8 +123,6 @@ class ScoreBoardWidget extends StatelessWidget {
         ],
       ),
     ));
-
-  
 
     return Expanded(
       // height: 200,

@@ -56,6 +56,8 @@ class RoundWidget extends StatelessWidget {
                         )
                       : RoundDetailPage(
                           round: round,
+                          totalHits: getTotalHits(),
+                          expectedHits: getExpectedHits(),
                         ))),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
