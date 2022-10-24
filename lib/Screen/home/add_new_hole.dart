@@ -168,38 +168,12 @@ class _AddNewHoleState extends State<AddNewHole> {
               height: 30,
             ),
             ButtonWidget(
-                onPressed: () {
+                onPressed: () async {
+                  await finishRound(round: widget.round);
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => const Home()));
                 },
                 text: 'Finish Round'),
-            // ElevatedButton(
-            //   style: ButtonStyle(
-            //     padding: MaterialStateProperty.resolveWith((states) {
-            //       return const EdgeInsets.symmetric(horizontal: 50, vertical: 12);
-            //     }),
-            //     shape: MaterialStateProperty.resolveWith((states) {
-            //       return RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(18),
-            //       );
-            //     }),
-            //     backgroundColor: MaterialStateProperty.resolveWith((states) {
-            //       // If the button is pressed, return green, otherwise blue
-            //       if (states.contains(MaterialState.pressed)) {
-            //         return Colors.lightGreenAccent;
-            //       }
-            //       return Colors.lightGreenAccent.shade400;
-            //     }),
-            //   ),
-            //   onPressed: () async {
-            //     Navigator.of(context).pushReplacement(MaterialPageRoute(
-            //         builder: (context) => const AddNewHole()));
-            //   },
-            //   child: const Text(
-            //     'Finish Round',
-            //     style: TextStyle(color: Colors.black),
-            //   ),
-            // )
           ],
         ),
       ),

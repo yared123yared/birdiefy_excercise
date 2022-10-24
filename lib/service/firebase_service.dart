@@ -27,7 +27,6 @@ Future<UserEntity> signInWithEmailAndPassword({
           .get()
           .then((value) => value)
           .then((value) => value.data());
-      print("User : $users");
       returned_user = UserEntity.fromJson(users!);
       returned_user.id = user.user!.uid;
 
@@ -35,9 +34,7 @@ Future<UserEntity> signInWithEmailAndPassword({
       await prefs.storeUserInformation(returned_user);
     });
     return returned_user;
-    // return _mapFirebaseUser(userCredential.user!);
   } on FirebaseAuthException catch (e) {
-    print("Eception: $e");
     throw determineError(e);
   }
 }
@@ -47,31 +44,27 @@ Future<UserEntity?> createUserWithEmailAndPassword(
     required String password,
     required UserEntity userEntity}) async {
   try {
-    // _firebaseAuth.sendSignInLinkToEmail(actionCodeSettings: acs, email: email);
     final userCredential = await _firebaseAuth
         .createUserWithEmailAndPassword(
       email: email,
       password: password,
     )
         .then((user) async {
-      print("Users ${user.user!.uid}");
       userEntity.id = user.user!.uid;
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.user!.uid)
           .set({
-        "email": userEntity.email,
-        "firstname": userEntity.firstName,
-        "lastname": userEntity.lastName,
-        "password": userEntity.password,
-        "handicap": userEntity.handicap,
-        "role": userEntity.role.toString() //
-      }).then((value) {
-        print("user created");
-      }).catchError((error) => throw Exception("Failed to add user: $error"));
+            "email": userEntity.email,
+            "firstname": userEntity.firstName,
+            "lastname": userEntity.lastName,
+            "password": userEntity.password,
+            "handicap": userEntity.handicap,
+            "role": userEntity.role.toString() //
+          })
+          .then((value) {})
+          .catchError((error) => throw Exception("Failed to add user: $error"));
     });
-    // print(userCredential.user);
-    // return _mapFirebaseUser(userCredential.user!);
   } on FirebaseAuthException catch (e) {
     throw determineError(e);
   }
@@ -93,11 +86,11 @@ Future<Round?> addHolesToRound(
         .doc(round.id)
         .collection('holes')
         .add({
-      "pars": holes.pars,
-      "hits": holes.hits, //
-    }).then((value) {
-      print("holes created $value");
-    }).catchError((error) => throw Exception("Failed to add user: $error"));
+          "pars": holes.pars,
+          "hits": holes.hits, //
+        })
+        .then((value) {})
+        .catchError((error) => throw Exception("Failed to add user: $error"));
   } on FirebaseAuthException catch (e) {
     throw determineError(e);
   }
@@ -125,6 +118,27 @@ Future<Round?> createNewRound(
         print("Holes created with id : ${hole.id}");
       });
     }).catchError((error) => throw Exception("Failed to add user: $error"));
+  } on FirebaseAuthException catch (e) {
+    throw determineError(e);
+  }
+}
+
+Future<Round?> finishRound({required Round? round}) async {
+  try {
+    UserEntity? userEntity =
+        await getIt<UserPreferences>().getUserInformation();
+    if (round == null) {
+      throw Exception("Round is null");
+    }
+    round.is_finished = true;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userEntity!.id)
+        .collection('rounds')
+        .doc(round.id)
+        .set(round.toJson())
+        .then((value) {})
+        .catchError((error) => throw Exception("Failed to add user: $error"));
   } on FirebaseAuthException catch (e) {
     throw determineError(e);
   }

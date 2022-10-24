@@ -1,4 +1,5 @@
 import 'package:app/Screen/home/add_new_hole.dart';
+import 'package:app/Screen/home/round_detail_page.dart';
 import 'package:app/model/holes.dart';
 import 'package:app/model/round.dart';
 import 'package:app/utils/app_theme.dart';
@@ -47,10 +48,12 @@ class RoundWidget extends StatelessWidget {
             round.holes = holes;
             return GestureDetector(
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AddNewHole(
-                        fromRound: true,
-                        round: round,
-                      ))),
+                  builder: (context) => round.is_finished != true
+                      ? AddNewHole(
+                          fromRound: true,
+                          round: round,
+                        )
+                      : const RoundDetailPage())),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FittedBox(
@@ -125,7 +128,7 @@ class RoundWidget extends StatelessWidget {
                                   Icons.query_stats,
                                   color: AppTheme.primaryColor,
                                 ),
-                                 SizedBox(
+                                SizedBox(
                                   width: 3,
                                 ),
                                 Text("stats",
