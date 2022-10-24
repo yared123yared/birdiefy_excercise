@@ -1,4 +1,4 @@
-import 'package:app/Screen/home/components/round_widget.dart';
+import 'package:app/Screen/round/components/round_widget.dart';
 import 'package:app/model/round.dart';
 import 'package:app/model/user_entity.dart';
 import 'package:app/preference/user_preference_data.dart';
@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 
 import 'add_new_round.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class RoundListPage extends StatefulWidget {
+  const RoundListPage({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<RoundListPage> createState() => _RoundListPageState();
 }
 
-class _HomeState extends State<Home> {
+class _RoundListPageState extends State<RoundListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
         ),
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) =>  AddNewRound()));
+              MaterialPageRoute(builder: (context) => const AddNewRound()));
         },
       ),
     );

@@ -1,8 +1,9 @@
-import 'package:app/Screen/home/home.dart';
+import 'package:app/Screen/round/round_list_page.dart';
 import 'package:app/Widget/button_widget.dart';
 import 'package:app/model/holes.dart';
 import 'package:app/model/round.dart';
 import 'package:app/utils/app_theme.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'components/selector_widget.dart';
@@ -41,9 +42,11 @@ class _AddNewHoleState extends State<AddNewHole> {
           alignment: Alignment.topRight,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: const [
-              Text(
-                "Golf Field 2",
+            children: [
+              AutoSizeText(
+                "${widget.round!.field_name}",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               SizedBox(
@@ -122,19 +125,30 @@ class _AddNewHoleState extends State<AddNewHole> {
                           round?.holes?.add(
                               Holes(hits: hitsSelected, pars: parsSelected));
 
-                          if (widget.fromRound) {
-                            await addHolesToRound(
-                                round: round,
-                                holes: Holes(
-                                    hits: hitsSelected, pars: parsSelected));
+                          if (round!.holes == null ||
+                              round.holes!.length <
+                                  round.number_of_holes!.toInt() + 1) {
+                            if (widget.fromRound) {
+                              await addHolesToRound(
+                                  round: round,
+                                  holes: Holes(
+                                      hits: hitsSelected, pars: parsSelected));
+                            } else {
+                              print("Round holes: ${round!.holes}");
+                              await createNewRound(round: round, holes: holes);
+                            }
                           } else {
-                            print("Round holes: ${round!.holes}");
-                            await createNewRound(round: round, holes: holes);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "Your Hole is filled with the desired hole number"),
+                              ),
+                            );
                           }
 
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                  builder: (context) => const Home()));
+                                  builder: (context) => const RoundListPage()));
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -169,9 +183,21 @@ class _AddNewHoleState extends State<AddNewHole> {
             ),
             ButtonWidget(
                 onPressed: () async {
+                  // if (widget.round!.holes!.length ==
+                  //     widget.round!.number_of_holes) {
+
+                  // } else {
+                  //   // the round is not ready to finish
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     SnackBar(
+                  //       content: Text(
+                  //           "This is not ready for finish ${widget.round!.holes!.length}"),
+                  //     ),
+                  //   );
+                  // }
                   await finishRound(round: widget.round);
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const Home()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const RoundListPage()));
                 },
                 text: 'Finish Round'),
           ],

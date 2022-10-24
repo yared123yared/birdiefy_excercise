@@ -7,7 +7,7 @@ class SelectorWidget extends StatefulWidget {
   final bool? isPars;
   final bool fromhits;
   final List list;
-  SelectorWidget(
+  const SelectorWidget(
       {super.key,
       required this.list,
       required this.fromhits,

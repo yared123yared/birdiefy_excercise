@@ -1,5 +1,6 @@
-import 'package:app/Screen/home/add_new_hole.dart';
-import 'package:app/Screen/home/round_detail_page.dart';
+import 'package:app/Screen/round/add_new_hole.dart';
+import 'package:app/Screen/round/components/stats_widget.dart';
+import 'package:app/Screen/round/round_detail/round_detail_page.dart';
 import 'package:app/model/holes.dart';
 import 'package:app/model/round.dart';
 import 'package:app/utils/app_theme.dart';
@@ -53,7 +54,7 @@ class RoundWidget extends StatelessWidget {
                           fromRound: true,
                           round: round,
                         )
-                      : const RoundDetailPage())),
+                      :  RoundDetailPage(round: round,))),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FittedBox(
@@ -119,24 +120,7 @@ class RoundWidget extends StatelessWidget {
                               )
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: const [
-                                Icon(
-                                  Icons.query_stats,
-                                  color: AppTheme.primaryColor,
-                                ),
-                                SizedBox(
-                                  width: 3,
-                                ),
-                                Text("stats",
-                                    style:
-                                        TextStyle(color: AppTheme.primaryColor))
-                              ],
-                            ),
-                          )
+                        const StatsWidget()
                         ],
                       ),
                     ),

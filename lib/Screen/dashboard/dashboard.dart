@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/Screen/home/home.dart';
+import 'package:app/Screen/round/round_list_page.dart';
 import 'package:app/Screen/profile/user_profile.dart';
 import 'package:app/model/user_entity.dart';
 import 'package:app/preference/user_preference_data.dart';
@@ -50,7 +50,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   List<Widget> _buildScreens() {
     return [
-      const Home(),
+      const RoundListPage(),
       FutureBuilder(
           future: getIt<UserPreferences>().getUserInformation(),
           builder: (BuildContext context, AsyncSnapshot<UserEntity?> snapshot) {
