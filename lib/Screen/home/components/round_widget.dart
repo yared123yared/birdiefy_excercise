@@ -21,12 +21,17 @@ class RoundWidget extends StatelessWidget {
     return sum;
   }
 
+  int getExpectedHits() {
+    if (round.holes == null) return 0;
+    int sum = 0;
+    for (int i = 0; i < round.holes!.length; i += 1) {
+      sum += round.holes![i].pars;
+    }
+    return sum;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final DocumentSnapshot documentSnapshot;
-    // print("Document ID: ${round.id}");
-    // int sum = 0;
-
     return StreamBuilder(
         stream:
             collectionReference.doc(round.id).collection('holes').snapshots(),
@@ -38,11 +43,6 @@ class RoundWidget extends StatelessWidget {
             List<Holes> holes = [];
             holes = List<Holes>.from(
                 doc.map((hole) => Holes.fromJson(hole.data())).toList());
-            // doc.map((e) {
-            //   Holes hole = Holes.fromJson(e.data());
-            //   print("Hole: $hole");
-            //   holes.add(hole);
-            // }).toList();
             print("Holes: $holes");
             round.holes = holes;
             return GestureDetector(
@@ -93,7 +93,7 @@ class RoundWidget extends StatelessWidget {
                             children: [
                               Text(
                                 "${getTotalHits()}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 25),
@@ -105,7 +105,7 @@ class RoundWidget extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    "+ ${5}",
+                                    "+ ${getTotalHits() - getExpectedHits()}",
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                   Text(
@@ -120,12 +120,12 @@ class RoundWidget extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
+                              children: const [
                                 Icon(
                                   Icons.query_stats,
                                   color: AppTheme.primaryColor,
                                 ),
-                                const SizedBox(
+                                 SizedBox(
                                   width: 3,
                                 ),
                                 Text("stats",
@@ -142,7 +142,7 @@ class RoundWidget extends StatelessWidget {
               ),
             );
           }
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         });
   }
 }
