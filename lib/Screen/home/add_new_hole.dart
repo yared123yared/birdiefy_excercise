@@ -110,14 +110,20 @@ class _AddNewHoleState extends State<AddNewHole> {
                         print("Pars and hits: $hitsSelected");
                         try {
                           Round? round = widget.round;
+                          Holes holes =
+                              Holes(hits: hitsSelected, pars: parsSelected);
+                          print("HOles before assignment: ${holes}");
                           round?.holes?.add(
                               Holes(hits: hitsSelected, pars: parsSelected));
 
                           if (widget.fromRound) {
-                            await addHolesToRound(round: round, holes: Holes(hits: hitsSelected, pars: parsSelected));
-                    
+                            await addHolesToRound(
+                                round: round,
+                                holes: Holes(
+                                    hits: hitsSelected, pars: parsSelected));
                           } else {
-                                    await createNewRound(round: round);
+                            print("Round holes: ${round!.holes}");
+                            await createNewRound(round: round, holes: holes);
                           }
 
                           Navigator.of(context).pushReplacement(

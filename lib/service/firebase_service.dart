@@ -103,31 +103,28 @@ Future<Round?> addHolesToRound(
   }
 }
 
-Future<Round?> createNewRound({required Round? round}) async {
+Future<Round?> createNewRound(
+    {required Round? round, required Holes holes}) async {
   try {
-    // _firebaseAuth.sendSignInLinkToEmail(actionCodeSettings: acs, email: email);
-    // final userCredential = await _firebaseAuth
-    //     .createUserWithEmailAndPassword(
-    //   email: email,
-    //   password: password,
-    // )
-    //     .then((user) async {
-    //   print("Users ${user.user!.uid}");
-    //   userEntity.id = user.user!.uid;
-    //   await FirebaseFirestore.instance
-    //       .collection('users')
-    //       .doc(user.user!.uid)
-    //       .set({
-    //     "email": userEntity.email,
-    //     "firstname": userEntity.firstName,
-    //     "lastname": userEntity.lastName,
-    //     "password": userEntity.password,
-    //     "handicap": userEntity.handicap,
-    //     "role": userEntity.role //
-    //   }).then((value) {
-    //     print("user created");
-    //   }).catchError((error) => throw Exception("Failed to add user: $error"));
-    // });
+    UserEntity? userEntity =
+        await getIt<UserPreferences>().getUserInformation();
+    if (round == null) {
+      throw Exception("Round is null");
+    }
+    final db = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userEntity!.id)
+        .collection('rounds');
+    await db.add(round.toJson()).then((round) async {
+      print("round created with id: ${round.id}");
+      await db
+          .doc(round.id)
+          .collection('holes')
+          .add(holes.toJson())
+          .then((hole) {
+        print("Holes created with id : ${hole.id}");
+      });
+    }).catchError((error) => throw Exception("Failed to add user: $error"));
   } on FirebaseAuthException catch (e) {
     throw determineError(e);
   }

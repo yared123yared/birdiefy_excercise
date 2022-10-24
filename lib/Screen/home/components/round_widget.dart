@@ -1,6 +1,7 @@
 import 'package:app/Screen/home/add_new_hole.dart';
 import 'package:app/model/round.dart';
 import 'package:app/utils/app_theme.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,8 @@ class RoundWidget extends StatelessWidget {
           return GestureDetector(
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => AddNewHole(
-                      fromRound: true, round: round,
+                      fromRound: true,
+                      round: round,
                     ))),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -44,12 +46,17 @@ class RoundWidget extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              round.field_name ?? "Golf Field 1",
-                              style: const TextStyle(
-                                  color: AppTheme.primaryColor,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16),
+                            Container(
+                              width: 150,
+                              child: AutoSizeText(
+                                round.field_name ?? "Golf Field 1",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    color: AppTheme.primaryColor,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16),
+                              ),
                             ),
                             Text(
                               round.date ?? "Sept 3",

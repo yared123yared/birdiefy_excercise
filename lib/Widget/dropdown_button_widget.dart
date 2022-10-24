@@ -2,9 +2,14 @@ import 'package:app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class DropDownButtonWidget extends StatefulWidget {
+  final ValueChanged<String> valueChanged;
   final List<String>? list;
   final String label;
-  const DropDownButtonWidget({super.key, required this.list, required this.label});
+  const DropDownButtonWidget(
+      {super.key,
+      required this.list,
+      required this.label,
+      required this.valueChanged});
 
   @override
   State<DropDownButtonWidget> createState() => _DropDownButtonWidgetState();
@@ -41,25 +46,22 @@ class _DropDownButtonWidgetState extends State<DropDownButtonWidget> {
                   fillColor: Colors.grey.shade900,
                   filled: true),
               value: dropdownValue,
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_drop_down,
                 size: 35,
                 color: AppTheme.primaryColor,
               ),
               dropdownColor: Colors.grey.shade900,
               style: const TextStyle(color: Colors.white),
-              onChanged: (String? value) {
-                // This is called when the user selects an item.
-                setState(() {
-                  dropdownValue = value!;
-                });
-              },
+              onChanged: (String? value) =>
+                  widget.valueChanged(value.toString()),
               items:
                   widget.list!.map<DropdownMenuItem<String>>((dynamic value) {
+                    
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(
-                    value,
+                    widget.label == 'Number of holes' ? '$value holes' : value,
                   ),
                 );
               }).toList(),

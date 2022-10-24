@@ -1,6 +1,7 @@
 import 'package:app/Repository/repository.dart';
 import 'package:app/Widget/button_widget.dart';
 import 'package:app/Widget/dropdown_button_widget.dart';
+import 'package:app/model/round.dart';
 import 'package:app/streams/nearby_course_stream.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,9 @@ class _AddNewRoundState extends State<AddNewRound> {
   DateTime? datel = DateTime.now();
   NearbyStream? nearbyStream =
       NearbyStream(Repository(httpClient: http.Client()));
+  String course = '';
+  String no_holes = '9';
+  String date = '';
 
   @override
   void initState() {
@@ -33,9 +37,13 @@ class _AddNewRoundState extends State<AddNewRound> {
       stream: nearbyStream?.responseData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          course = snapshot.data![0];
           return DropDownButtonWidget(
             list: snapshot.data!.length != 0 ? snapshot.data : ["Location 1"],
             label: 'Select the course',
+            valueChanged: (String value) {
+              course = value;
+            },
           );
         }
         if (snapshot.hasError) {
@@ -48,7 +56,7 @@ class _AddNewRoundState extends State<AddNewRound> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> list = ["Select the place", "test 1", "test 2"];
+    List<String> list = ["9", "18"];
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.grey.shade900,
@@ -101,6 +109,9 @@ class _AddNewRoundState extends State<AddNewRound> {
                       DropDownButtonWidget(
                         list: list,
                         label: 'Number of holes',
+                        valueChanged: (String value) {
+                          no_holes = value;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -113,9 +124,14 @@ class _AddNewRoundState extends State<AddNewRound> {
             ),
             ButtonWidget(
                 onPressed: () {
+                  Round round = Round(
+                      field_name: course,
+                      date: "Sept 14",
+                      number_of_holes: int.parse(no_holes));
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => AddNewHole(
                             fromRound: false,
+                            round: round,
                           )));
                 },
                 text: 'Add holes')

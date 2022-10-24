@@ -3,10 +3,10 @@ import 'package:app/model/holes.dart';
 
 class Round extends Equatable {
   Round(
-      {required this.id,
+      { this.id,
       required this.field_name,
       required this.date,
-      required this.holes,
+       this.holes,
       required this.number_of_holes});
 
   String? id;
