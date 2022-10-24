@@ -34,6 +34,7 @@ class RoundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int totalScore = getTotalHits() - getExpectedHits();
     return StreamBuilder(
         stream:
             collectionReference.doc(round.id).collection('holes').snapshots(),
@@ -113,7 +114,7 @@ class RoundWidget extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    "+ ${getTotalHits() - getExpectedHits()}",
+                                    "${totalScore < 0 ? totalScore : '+$totalScore'}",
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                   Text(
